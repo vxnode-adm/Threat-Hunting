@@ -1,52 +1,81 @@
-# Suspicious IP Detection and Response Tool
+# Linux Threat Hunter
 
-This Bash script is a lightweight network security utility designed to identify suspicious IP addresses currently connected to a Linux system. 
-It reads a list of potentially malicious IPs from a custom file (`ip_list.txt`) maintained and updated daily by the developer, allowing continuous monitoring against newly identified threats.
+A lightweight Linux threat hunting script that monitors active network connections and compares them in real time against a remote IP threat feed hosted on GitHub.
 
-## Features
+No local files or manual updates are required, the threat intelligence list is fetched live every time the script runs.
 
-* Reads suspicious IP addresses from a personally maintained and daily updated list
-* Scans active TCP/UDP connections for matches using the `ss` command
-* Displays detected suspicious IPs
-* Allows the user to:
+---
 
-  * Kill associated processes
-  * Block IPs using iptables firewall rules
-  * Retrieve additional IP information via the ipinfo.io API
-* Interactive command-line prompts for safer execution
+## What it does
 
-## How It Works
+The script inspects active TCP/UDP connections using `ss -tupn` and extracts all active IP addresses from running processes. It then compares them against a remotely maintained threat feed.
 
-1. The script reads IP addresses from `ip_list.txt`.
-2. It searches current network connections for matching IPs.
-3. If suspicious IPs are found, the user can:
+If a match is found, the script can:
 
-   * Terminate related processes
-   * Block the IPs at the firewall level
-   * Query external geolocation and network information
-4. If no matches are found, the script exits safely.
+* Display suspicious IPs
+* Block IPs using `iptables` 
+* Save firewall rules persistently
+* Fetch threat intelligence data 
 
-## IP Intelligence List
+---
 
-The `ip_list.txt` file is manually curated and updated daily to include newly discovered suspicious or unwanted IP addresses.
-This allows the tool to remain adaptable and continuously improve its detection capabilities over time.
+## Threat Feed
 
-## Use Cases
+The IP list is hosted and maintained on GitHub and updated regularly.
 
-* Basic incident response
-* Monitoring suspicious outbound/inbound connections
-* Blocking known malicious IPs
-* Educational cybersecurity demonstrations
-* Lightweight server/network administration
+It is fetched live at runtime using:
+
+```text id="g7k2lm"
+https://raw.githubusercontent.com/vxnode-adm/Threat-Hunting/main/ip_list.txt
+```
+
+The script automatically ignores comments and descriptions and extracts only valid IPv4 addresses.
+
+---
 
 ## Requirements
 
-* Linux-based operating system
-* Bash shell
-* `ss` command available
-* `iptables` installed
-* Internet connection for IP information lookup
+* Linux system
+* Bash
+* `ss`
+* `curl`
+* `iptables`
+* Root privileges (sudo)
+
+---
+
+## Usage
+
+```bash id="p4x9sa"
+chmod +x hunter.sh
+sudo ./hunter.sh
+```
+
+---
+
+## How it works
+
+1. Reads active connections via `ss -tupn`
+2. Fetches remote threat feed in real time
+3. Extracts and filters IPv4 addresses
+4. Compares active IPs with threat intelligence feed
+5. Triggers actions if matches are found
+
+---
+
+## Features
+
+* No local IP list required
+* Real-time GitHub threat feed integration
+* Automatic IP extraction from raw feed
+* Interactive blocking system
+* Firewall persistence support
+* Threat intelligence lookup via API
+
+---
 
 ## Notes
 
-This script should be executed with elevated privileges (`sudo`) for process termination and firewall modifications to work properly.
+* Requires root privileges for firewall changes
+* Designed for defensive security and threat hunting
+* Lightweight and dependency-free
