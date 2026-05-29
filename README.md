@@ -9,7 +9,6 @@ The script can also enrich detections using ThreatFox IOC data and optionally bl
 ## Features
 
 ### Current Features
-71a3a79049fefbf62d0b9aeec40d9a1cd49b01f6f1886720
 
 * Detects active network connections using:
 
