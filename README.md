@@ -48,7 +48,7 @@ The script automatically ignores comments and descriptions and extracts only val
 
 ```bash id="p4x9sa"
 chmod +x hunter.sh
-sudo ./hunter.sh
+sudo ./reaper.sh
 ```
 
 ---
